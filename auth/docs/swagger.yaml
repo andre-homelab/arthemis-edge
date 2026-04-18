@@ -1,0 +1,13 @@
+basePath: /
+host: localhost:6769
+info:
+  contact: {}
+  description: API para autenticação JWT
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Authentication API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

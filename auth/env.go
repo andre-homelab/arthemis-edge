@@ -1,4 +1,4 @@
-package auth
+package main
 
 import (
 	"log/slog"
@@ -8,15 +8,16 @@ import (
 )
 
 func init() {
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		slog.Error("Aviso: não foi possível carregar .env (talvez ele não exista?)", "err", err)
 	}
 }
 
-func mustGetEnv(key string) string {
+func GetEnv(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
 		slog.Error("environment variable %s is required", "key", key)
+		os.Exit(1)
 	}
 	return value
 }
