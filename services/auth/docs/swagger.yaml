@@ -2,12 +2,45 @@ basePath: /
 host: localhost:6769
 info:
   contact: {}
-  description: API para autenticação JWT
+  description: API service for JWT token validation and authentication.
   license:
     name: MIT
     url: http://opensource.org/licenses/MIT
   termsOfService: http://swagger.io/terms/
   title: Authentication API
   version: "1.0"
-paths: {}
+paths:
+  /validate:
+    post:
+      consumes:
+      - application/json
+      description: Parses the Authorization header, validates the HMAC signature,
+        and returns user identity in response headers.
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token is valid. User info returned in X-User-Id and X-User-Role
+            headers.
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: Missing or invalid token'
+          schema:
+            type: string
+      summary: Validate JWT Token
+      tags:
+      - Authentication
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer " followed by your JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
