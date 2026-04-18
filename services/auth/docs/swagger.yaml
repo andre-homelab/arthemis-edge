@@ -17,7 +17,8 @@ paths:
       description: Parses the Authorization header, validates the HMAC signature,
         and returns user identity in response headers.
       parameters:
-      - description: Bearer <token>
+      - description: Bearer token
+        example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         in: header
         name: Authorization
         required: true

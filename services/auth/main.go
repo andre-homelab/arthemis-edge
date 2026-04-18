@@ -35,7 +35,7 @@ import (
 // @Tags         Authentication
 // @Accept       json
 // @Produce      json
-// @Param        Authorization  header    string  true  "Bearer <token>"
+// @Param Authorization header string true "Bearer token" example(Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...)
 // @Success      200  {string}  string    "Token is valid. User info returned in X-User-Id and X-User-Role headers."
 // @Failure      401  {string}  string    "Unauthorized: Missing or invalid token"
 // @Router       /validate [post]
@@ -59,19 +59,29 @@ func validate(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil || !token.Valid {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
-		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		http.Error(w, "Invalid claims", http.StatusUnauthorized)
-		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
-	w.Header().Set("X-User-Id", fmt.Sprintf("%v", claims["sub"]))
-	w.Header().Set("X-User-Role", fmt.Sprintf("%v", claims["role"]))
+	sub, ok := claims["sub"].(string)
+	if !ok || sub == "" {
+		http.Error(w, "Invalid or missing 'sub'", http.StatusUnauthorized)
+		return
+	}
+
+	role, ok := claims["role"].(string)
+	if !ok || role == "" {
+		http.Error(w, "Invalid or missing 'role'", http.StatusUnauthorized)
+		return
+	}
+
+	w.Header().Set("X-User-Id", fmt.Sprintf("%v", sub))
+	w.Header().Set("X-User-Role", fmt.Sprintf("%v", role))
 
 	w.WriteHeader(http.StatusOK)
 }
@@ -92,7 +102,6 @@ func main() {
 		r.Post("/", validate)
 	})
 
-	// Rota do Swagger UI
 	r.Get("/swagger/*", httpSwagger.Handler(
 		httpSwagger.URL("doc.json"),
 	))

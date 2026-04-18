@@ -36,7 +36,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Bearer \u003ctoken\u003e",
+                        "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "description": "Bearer token",
                         "name": "Authorization",
                         "in": "header",
                         "required": true
