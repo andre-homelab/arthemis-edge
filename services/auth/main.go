@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/golang-jwt/jwt/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 // @title           Authentication API
@@ -71,6 +72,11 @@ func main() {
 	})
 
 	r.HandleFunc("/validate", validate)
+
+	// Rota do Swagger UI
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:6769/swagger/doc.json"), // A URL para o doc.json
+	))
 
 	slog.Info("Auth service starting", "port", 6769)
 	if err := http.ListenAndServe(":6769", r); err != nil {

@@ -8,9 +8,15 @@ import (
 )
 
 func init() {
-	if err := godotenv.Load("../.env"); err != nil {
-		slog.Error("Aviso: não foi possível carregar .env (talvez ele não exista?)", "err", err)
+	paths := []string{".env", "../.env", "../../.env"}
+	for _, path := range paths {
+		if _, err := os.Stat(path); err == nil {
+			if err := godotenv.Load(path); err == nil {
+				return
+			}
+		}
 	}
+	slog.Warn("Aviso: nenhum arquivo .env encontrado")
 }
 
 func GetEnv(key string) string {
