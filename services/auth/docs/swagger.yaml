@@ -1,5 +1,23 @@
 basePath: /
 definitions:
+  models.CreateUserRequest:
+    properties:
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  models.CreateUserResponse:
+    properties:
+      role:
+        type: string
+      sub:
+        type: string
+      username:
+        type: string
+    type: object
   models.LoginRequest:
     properties:
       password:
@@ -56,6 +74,40 @@ paths:
           schema:
             type: string
       summary: Login
+      tags:
+      - Authentication
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Receives user data, hashes the password and persists the new user.
+      parameters:
+      - description: New user data
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User criado com sucesso
+          schema:
+            $ref: '#/definitions/models.CreateUserResponse'
+        "400":
+          description: 'Bad Request: invalid body'
+          schema:
+            type: string
+        "409":
+          description: 'Conflict: username already exists'
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Register user
       tags:
       - Authentication
   /validate:

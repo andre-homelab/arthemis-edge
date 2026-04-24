@@ -1,10 +1,10 @@
-up: docker api
+up: docker docs api
 
 docker:
 	docker compose up -d
 
 api:
-	go run .
+	go fmt ./... ; go run .
 
 docs:
 	swag init -g ./main.go -o ./docs

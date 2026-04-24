@@ -2,11 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
 
 	"github.com/andre-homelab/arthemis-edge/models"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 // Login generates a JWT token for valid credentials.
@@ -57,20 +60,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func authenticateUser(username, password string) (sub string, role string, ok bool) {
-	// Exemplo hardcoded — troque por bcrypt + DB lookup
-	users := map[string]struct {
-		password string
-		sub      string
-		role     string
-	}{
-		"admin": {"secret123", "user-001", "admin"},
-		"user":  {"pass456", "user-002", "viewer"},
-	}
+	var user models.User
 
-	u, exists := users[username]
-	if !exists || u.password != password {
+	result := DB.Where("username = ?", username).First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return "", "", false
+		}
 		return "", "", false
 	}
 
-	return u.sub, u.role, true
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return "", "", false
+	}
+
+	return user.Sub, user.Role, true
 }

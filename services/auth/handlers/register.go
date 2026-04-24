@@ -15,8 +15,7 @@ import (
 var ErrUserAlreadyExists = errors.New("user already exists")
 var DB *gorm.DB
 
-// CreateUser creates a new user with hashed password.
-// @Summary      Create User
+// @Summary      Register user
 // @Description  Receives user data, hashes the password and persists the new user.
 // @Tags         Authentication
 // @Accept       json
@@ -26,9 +25,8 @@ var DB *gorm.DB
 // @Failure      400   {string}  string                     "Bad Request: invalid body"
 // @Failure      409   {string}  string                     "Conflict: username already exists"
 // @Failure      500   {string}  string                     "Internal Server Error"
-// @Router       /users [post]
-
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+// @Router       /register [post]
+func Register(w http.ResponseWriter, r *http.Request) {
 	var req models.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)

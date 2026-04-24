@@ -33,6 +33,7 @@ import (
 // @description                Type "Bearer " followed by your JWT token.
 
 func main() {
+	initDatabase()
 
 	mux := chi.NewRouter()
 
@@ -51,6 +52,10 @@ func main() {
 
 	mux.Route("/login", func(mux chi.Router) {
 		mux.Post("/", handlers.Login)
+	})
+
+	mux.Route("/register", func(mux chi.Router) {
+		mux.Post("/", handlers.Register)
 	})
 
 	mux.Get("/swagger/*", httpSwagger.Handler(
