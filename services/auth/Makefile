@@ -1,8 +1,13 @@
-up:
+up: docker api
+
+docker:
+	docker compose up -d
+
+api:
 	go run .
 
 docs:
 	swag init -g ./main.go -o ./docs
 
 clean:
-	rm -rf ./docs
+	rm -rf ./docs ; docker compose down

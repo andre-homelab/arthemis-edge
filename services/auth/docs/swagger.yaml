@@ -1,4 +1,17 @@
 basePath: /
+definitions:
+  models.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
 host: localhost:6769
 info:
   contact: {}
@@ -10,6 +23,41 @@ info:
   title: Authentication API
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Validates user credentials and returns a signed JWT token with
+        sub and role claims.
+      parameters:
+      - description: User credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT token gerado com sucesso
+          schema:
+            $ref: '#/definitions/models.LoginResponse'
+        "400":
+          description: 'Bad Request: invalid body'
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: invalid credentials'
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - Authentication
   /validate:
     post:
       consumes:
