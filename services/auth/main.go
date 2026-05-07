@@ -41,10 +41,7 @@ func main() {
 	mux.Use(middleware.Recoverer)
 	mux.Use(middleware.RealIP)
 
-	mux.Get("/health", func(w http.ResponseWriter, mux *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("ok"))
-	})
+	mux.Get("/health", handlers.Health)
 
 	mux.Route("/validate", func(mux chi.Router) {
 		mux.Post("/", handlers.Validate)
@@ -56,6 +53,10 @@ func main() {
 
 	mux.Route("/register", func(mux chi.Router) {
 		mux.Post("/", handlers.Register)
+	})
+
+	mux.Route("/unregister", func(mux chi.Router) {
+		mux.Post("/", handlers.Unregister)
 	})
 
 	mux.Get("/swagger/*", httpSwagger.Handler(
