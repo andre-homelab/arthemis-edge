@@ -6,3 +6,4 @@ http:
           - security-default
           - cors-default
           - rate-limit
+          - auth-jwt
