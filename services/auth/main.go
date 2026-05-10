@@ -43,9 +43,14 @@ func main() {
 
 	mux.Get("/health", handlers.Health)
 
-	mux.Route("/validate", func(mux chi.Router) {
-		mux.Post("/", handlers.Validate)
-	})
+	/*
+		Aparentemente, ao fazer o roteamento dentro de uma docker network usando o chi causa um comportamento inesperado com o método mux.Route().
+		Assim, decidi usar o MethodFunc() para lidar com essas questões.
+	*/
+	mux.MethodFunc(http.MethodGet, "/validate", handlers.Validate)
+	mux.MethodFunc(http.MethodPost, "/validate", handlers.Validate)
+	mux.MethodFunc(http.MethodGet, "/validate/", handlers.Validate)
+	mux.MethodFunc(http.MethodPost, "/validate/", handlers.Validate)
 
 	mux.Route("/login", func(mux chi.Router) {
 		mux.Post("/", handlers.Login)

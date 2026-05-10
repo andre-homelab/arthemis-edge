@@ -6,14 +6,15 @@ O gateway foi preparado para:
 
 - rotear o microserviço `brain`
 - rotear o microserviço `watcher`
+- autenticar via microserviço `auth`
 - hospedar BFFs no mesmo repositório e na mesma rede Docker
 - centralizar CORS e middlewares HTTP na borda
-- funcionar sem depender do provider Docker do Traefik
 
 ## Portas definidas
 
 - `brain`: `8081`
 - `watcher`: `8082`
+- `auth`: `6769
 - faixa sugerida para BFFs: `8091+`
 - dashboard do Traefik: `8080`
 - entrada HTTP do gateway: `80`
@@ -23,14 +24,15 @@ O gateway foi preparado para:
 
 - `/brain/*` -> serviço `brain`
 - `/watcher/*` -> serviço `watcher`
+- `/auth/*` -> serviço `auth` 
 - `/bff/<nome>/*` -> BFF correspondente
 
-Os prefixos `/brain` e `/watcher` são removidos pelo Traefik antes de encaminhar a request para o serviço interno.
+Os prefixos `/brain`, `/watcher` e `/auth` são removidos pelo Traefik antes de encaminhar a request para o serviço interno.
 
-## Subida local
+## Subida do gateway e auth service local
 
 ```bash
-docker compose up -d
+make up
 ```
 
 O Traefik sobe sozinho e lê as rotas a partir dos arquivos em `traefik/dynamic`.

@@ -16,3 +16,8 @@ http:
       stripPrefix:
         prefixes:
           - /watcher
+
+    strip-auth-prefix:
+      stripPrefix:
+        prefixes:
+          - /auth
