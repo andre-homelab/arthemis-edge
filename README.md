@@ -14,7 +14,7 @@ O gateway foi preparado para:
 
 - `brain`: `8081`
 - `watcher`: `8082`
-- `auth`: `6769
+- `auth`: `6769`
 - faixa sugerida para BFFs: `8091+`
 - dashboard do Traefik: `8080`
 - entrada HTTP do gateway: `80`
