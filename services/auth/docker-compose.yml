@@ -10,6 +10,8 @@ services:
         condition: service_healthy
     ports:
       - "6769:6769"
+    volumes:
+      - ./.env:/app/.env
     networks:
       arthemis-edge:
         aliases:

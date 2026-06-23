@@ -1,5 +1,16 @@
 http:
   routers:
+    brain-public:
+      entryPoints:
+        - web
+      rule: PathPrefix(`/brain/swagger`) || PathPrefix(`/brain/health`)
+      service: brain
+      middlewares:
+        - security-default
+        - cors-default
+        - rate-limit
+        - strip-brain-prefix
+
     brain:
       entryPoints:
         - web
@@ -9,13 +20,26 @@ http:
         - gateway-chain
         - strip-brain-prefix
 
+    watcher-public:
+      entryPoints:
+        - web
+      rule: PathPrefix(`/watcher/swagger`) || PathPrefix(`/watcher/health`)
+      service: watcher
+      middlewares:
+        - security-default
+        - cors-default
+        - rate-limit
+        - strip-watcher-prefix
+
     watcher:
       entryPoints:
         - web
       rule: PathPrefix(`/watcher`)
       service: watcher
       middlewares:
-        - gateway-chain
+        - security-default
+        - cors-default
+        - rate-limit
         - strip-watcher-prefix
 
     auth:

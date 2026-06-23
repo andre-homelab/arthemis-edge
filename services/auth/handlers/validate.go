@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -19,6 +20,19 @@ import (
 // @Failure      401  {string}  string    "Unauthorized: Missing or invalid token"
 // @Router       /validate [post]
 func Validate(w http.ResponseWriter, r *http.Request) {
+	// Bypass de autenticação para endpoints do Swagger se as flags de desenvolvimento estiverem habilitadas
+	isDev := os.Getenv("DEVELOPMENT") == "true"
+	allowSwagger := os.Getenv("ALLOW_UNAUTHENTICATED_SWAGGER") == "true"
+	forwardedUri := r.Header.Get("X-Forwarded-Uri")
+	isSwagger := strings.Contains(forwardedUri, "/swagger")
+
+	if isDev && allowSwagger && isSwagger {
+		w.Header().Set("X-User-Id", "guest")
+		w.Header().Set("X-User-Role", "admin")
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	authHeader := r.Header.Get("Authorization")
 
 	if authHeader == "" {
